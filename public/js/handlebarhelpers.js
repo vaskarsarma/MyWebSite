@@ -1,0 +1,5 @@
+
+function ddd()
+{
+return "ddddd";
+}

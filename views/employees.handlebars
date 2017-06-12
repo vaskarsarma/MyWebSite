@@ -1,0 +1,53 @@
+<div class="col-sm-12">
+    <h1>List of Employees</h1>
+</div>
+
+<div>
+    {{#if isEmpAdded }}
+    <div class="col-sm-6 text-success"><i>Employee is added succesfully.</i></div>
+    <div class="col-sm-6 text-right">
+        <a href="/employees/add"><img class="img-circle imgwidth" src="/images/add.jpg" alt="Add employee"/></a>
+        <a href="/home"><img class="img-circle imgwidth" src="/images/home.jpg" alt="Home"/></a>
+    </div> &nbsp; {{else}} {{#if isEmpDeleted }}
+    <div class="col-sm-6 text-success"><i>Employee (ID: {{empid}}) is deleted succesfully.</i></div>
+    <div class="col-sm-6 text-right">
+        <a href="/employees/add"><img class="img-circle imgwidth" src="/images/add.jpg" alt="Add employee"/></a>
+        <a href="/home"><img class="img-circle imgwidth" src="/images/home.jpg" alt="Home"/></a>
+    </div>&nbsp; {{else}} {{#if isEmpUpdated }}
+    <div class="col-sm-6 text-success"><i>Employee (ID: {{empid}}) is updated succesfully.</i></div>
+    <div class="col-sm-6 text-right">
+        <a href="/employees/add"><img class="img-circle imgwidth" src="/images/add.jpg" alt="Add employee"/></a>
+        <a href="/home"><img class="img-circle imgwidth" src="/images/home.jpg" alt="Home"/></a>
+    </div>&nbsp; {{else}}
+    <div class="col-sm-12 text-right">
+        <a href="/employees/add"><img class="img-circle imgwidth" src="/images/add.jpg" alt="Add employee"/></a>
+        <a href="/home"><img class="img-circle imgwidth" src="/images/home.jpg" alt="Home"/></a>
+    </div>&nbsp; {{/if}} {{/if}} {{/if}}
+</div>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Modify</th>
+            </tr>
+        </thead>
+        {{#each employees}}
+        <tbody>
+            <tr>
+                <td>{{this.empid}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.department}}</td>
+                <td>
+                    <a href="/employees/edit/{{this._id}}"><img class="img-circle emplist_imgwidth" src="/images/edit.jpg" alt="Edit Employee"/></a>
+                    <a href="/employees/delete/{{this._id}}"><img class="img-circle emplist_imgwidth" src="/images/delete.jpg" alt="Delete Employee"/></a>
+                </td>
+            </tr>
+        </tbody>
+        {{/each}}
+    </table>
+</div>
+</div>
