@@ -4,6 +4,8 @@ var path = require("path");
 var hbs = require("express-handlebars");
 var bodyparser = require("body-parser");
 var db = require('./models/db');
+var expressValidator = require('express-validator');
+var flash = require('connect-flash');
 //var expressValidator = require('express-validator');
 
 //app.use(require("cookie-parser"));
@@ -34,12 +36,36 @@ require("./passport-init");
 // Configuring Passport
 var passport = require("passport");
 var expressSession = require('express-session');
+
 app.use(require('express-session')({
   secret: 'keyboard cat', resave: false, saveUninitialized: false
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+
+app.use(flash());
+
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
 // Using the flash middleware provided by connect-flash to store messages in session
 // and displaying in templates
 //var flash = require('connect-flash');
@@ -55,6 +81,9 @@ app.use('/', authRouter);
 
 var forgotpwd = require('./controllers/forgotpwd');
 app.use('/', forgotpwd);
+
+var userregistration = require('./controllers/userregistration');
+app.use('/', userregistration);
 // app.get("/login", function (req, res) {
 //   console.log("login get");
 //   res.render('login', { title: 'Login Page' });
