@@ -52,6 +52,9 @@ app.use(passport.session());
 var authRouter = require('./controllers/authroute');
 app.use('/', authRouter);
 
+
+var forgotpwd = require('./controllers/forgotpwd');
+app.use('/', forgotpwd);
 // app.get("/login", function (req, res) {
 //   console.log("login get");
 //   res.render('login', { title: 'Login Page' });
