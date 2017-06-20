@@ -4,6 +4,8 @@ var state = {
     db: null,
 }
 
+exports.url= 'mongodb://vaskar:12345678@ds161001.mlab.com:61001/mytest_mongodb';
+
 exports.connect = function(url, done) {
     if (state.db) return done()
 

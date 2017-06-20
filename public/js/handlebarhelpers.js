@@ -1,5 +1,0 @@
-
-function ddd()
-{
-return "ddddd";
-}

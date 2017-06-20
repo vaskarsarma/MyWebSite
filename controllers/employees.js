@@ -2,17 +2,20 @@ var express = require("express");
 var router = express.Router();
 var MongoDB = require("mongodb").MongoClient;
 var ObjectId = require("mongodb").ObjectID;
+var util = require('util');
 
 var db = require('../models/db');
 var data = require('../models/empdetails');
 
+module.exports = router;
+
 //================== Get List of Employees =================
-router.get('/list', function(req, res) {
+router.get('/list', function (req, res) {
     console.log("l1");
-    data.emplist(function(err, results) {
+    data.emplist(function (err, results) {
         console.log("l2");
         if (err) {
-            console.log("l3");
+            console.log("l3" + err);
             res.status(500).send();
         } else {
             console.log("l4");
@@ -22,15 +25,26 @@ router.get('/list', function(req, res) {
 });
 
 //================== Save Data =================
-router.post("/savedata", function(req, res) {
+router.post("/savedata", function (req, res) {
     console.log("3");
 
+    // req.assert("empid", "Please enter employee id").notEmpty().isInt();
+    // req.assert("name", "Please enter name").notEmpty().isAlpha();
+    // req.assert("department", "Please enter department").notEmpty().isAlpha();
+
+    // // when using generators e.g. with co-express
+    // req.getValidationResult().then(function (result) {
+    //     if (!result.isEmpty()) {
+    //         res.status(400).send('There have been validation errors: ' + util.inspect(result.array()));
+    //         return;
+    //     }
+    //else {
     if (req.body._id != undefined && req.body._id != null) {
         var id = req.body._id;
         var empid = req.body.empid;
         console.log("Save Data : " + id);
 
-        db.get().collection('mytestdb').findOne({ _id: ObjectId(id) }, function(err, info) {
+        db.get().collection('mytestdb').findOne({ _id: ObjectId(id) }, function (err, info) {
             if (err) {
                 console.log("u1");
                 res.status(500).send();
@@ -54,7 +68,7 @@ router.post("/savedata", function(req, res) {
                             res.status(500).send();
                         } else {
                             console.log("Data updated Successfully");
-                            data.emplist(function(err, results) {
+                            data.emplist(function (err, results) {
                                 if (err) {
                                     console.log("u6");
                                     console.log(err);
@@ -81,7 +95,7 @@ router.post("/savedata", function(req, res) {
                             res.status(500).send();
                         } else {
                             console.log("Data Saved Successfully");
-                            data.emplist(function(err, results) {
+                            data.emplist(function (err, results) {
                                 if (err) {
                                     console.log("6");
                                     console.log(err);
@@ -112,7 +126,7 @@ router.post("/savedata", function(req, res) {
                 res.status(500).send();
             } else {
                 console.log("Data Saved Successfully");
-                data.emplist(function(err, results) {
+                data.emplist(function (err, results) {
                     if (err) {
                         console.log("6");
                         console.log(err);
@@ -132,16 +146,18 @@ router.post("/savedata", function(req, res) {
             }
         });
     }
+    //}
+    //});
 });
 
 //================== Delete Employee =================
-router.get('/delete/:_id', function(req, res) {
+router.get('/delete/:_id', function (req, res) {
     console.log("d1");
 
     var id = req.params._id;
     var empid = "";
 
-    db.get().collection('mytestdb').findOne({ _id: ObjectId(id) }, function(err, info) {
+    db.get().collection('mytestdb').findOne({ _id: ObjectId(id) }, function (err, info) {
         if (err) {
             console.log("d2");
             res.status(500).send();
@@ -151,13 +167,13 @@ router.get('/delete/:_id', function(req, res) {
             if (info._id != undefined) {
                 empid = info.empid;
 
-                db.get().collection('mytestdb', {}, function(err, contacts) {
-                    contacts.remove({ _id: ObjectId(id) }, function(err, docs) {
+                db.get().collection('mytestdb', {}, function (err, contacts) {
+                    contacts.remove({ _id: ObjectId(id) }, function (err, docs) {
                         if (err) {
                             console.log(err);
                         } else {
                             console.log("Record deleted Successfully");
-                            data.emplist(function(err, results) {
+                            data.emplist(function (err, results) {
                                 if (err) {
                                     console.log("d6");
                                     console.log(err);
@@ -176,12 +192,12 @@ router.get('/delete/:_id', function(req, res) {
 });
 
 //================== Edit Employee =================
-router.get('/edit/:_id', function(req, res) {
+router.get('/edit/:_id', function (req, res) {
     console.log("id : " + req.params._id);
 
     var id = req.params._id;
 
-    db.get().collection('mytestdb').findOne({ _id: ObjectId(id) }, function(err, info) {
+    db.get().collection('mytestdb').findOne({ _id: ObjectId(id) }, function (err, info) {
         if (err) {
             console.log("e1");
             res.status(500).send();
@@ -193,4 +209,3 @@ router.get('/edit/:_id', function(req, res) {
     });
 });
 
-module.exports = router;
